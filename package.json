@@ -1,0 +1,55 @@
+{
+    "author": "Christoph Bartschat",
+    "dependencies": {
+        "base-x": "^5.0.1",
+        "pebble-clay": "^1.0.0"
+    },
+    "keywords": [
+        "pebble-app"
+    ],
+    "name": "64-cores",
+    "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
+        "displayName": "64 Cores",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "BACKGROUND_COLOR",
+            "REFRESH",
+            "STATE",
+            "TYPE",
+            "LEVELS",
+            "BROKEN",
+            "CYCLES",
+            "GAME_URL"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/64sprites.png",
+                    "name": "SPRITES",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "MENU_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "emery"
+        ],
+        "uuid": "d840beab-f9d4-4d61-a78a-9d8ad764fe20",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}
