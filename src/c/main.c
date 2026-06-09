@@ -25,45 +25,42 @@ typedef struct {
 
 int extract_uint32(Tuple *t, uint32_t *target) {
   switch (t->type) {
-  case TUPLE_UINT:
-    switch (t->length) {
-    case 1:
-      *target = t->value->uint8;
-      return 0;
-    case 2:
-      *target = t->value->uint16;
-      return 0;
-    case 4:
-      *target = t->value->uint32;
-      return 0;
+    case TUPLE_UINT:
+      switch (t->length) {
+        case 1:
+          *target = t->value->uint8;
+          return 0;
+        case 2:
+          *target = t->value->uint16;
+          return 0;
+        case 4:
+          *target = t->value->uint32;
+          return 0;
+        default:
+          return 1;
+      }
+
+    case TUPLE_INT:
+      switch (t->length) {
+        case 1:
+          if (t->value->int8 < 0) return 1;
+          *target = t->value->int8;
+          return 0;
+        case 2:
+          if (t->value->int16 < 0) return 1;
+          *target = t->value->int16;
+          return 0;
+
+        case 4:
+          if (t->value->int32 < 0) return 1;
+          s_cycles = t->value->int32;
+          return 0;
+        default:
+          return 1;
+      }
+
     default:
       return 1;
-    }
-
-  case TUPLE_INT:
-    switch (t->length) {
-    case 1:
-      if (t->value->int8 < 0)
-        return 1;
-      *target = t->value->int8;
-      return 0;
-    case 2:
-      if (t->value->int16 < 0)
-        return 1;
-      *target = t->value->int16;
-      return 0;
-
-    case 4:
-      if (t->value->int32 < 0)
-        return 1;
-      s_cycles = t->value->int32;
-      return 0;
-    default:
-      return 1;
-    }
-
-  default:
-    return 1;
   }
 }
 
@@ -80,7 +77,6 @@ static void update_bottom_row() {
   static char right_buffer[160];
 
   if (s_load_status == LoadStatusLoaded) {
-
     if (s_cycles >= 10 * 1000 * 1000) {
       snprintf(right_buffer, sizeof(right_buffer), "%luM",
                s_cycles / (1000 * 1000));
@@ -182,7 +178,6 @@ void handle_app_message(DictionaryIterator *iterator, void *context) {
       layer_mark_dirty(s_grid_layer);
       update_bottom_row();
     } else if (strcmp(t->value->cstring, "STATE") == 0) {
-
       Tuple *levels = dict_find(iterator, MESSAGE_KEY_LEVELS);
       if (levels && levels->type == TUPLE_BYTE_ARRAY) {
         for (int i = 0; i < levels->length; i++) {
@@ -205,6 +200,8 @@ void handle_app_message(DictionaryIterator *iterator, void *context) {
       s_load_status = LoadStatusLoaded;
       layer_mark_dirty(s_grid_layer);
       update_bottom_row();
+      persist_write_int(MESSAGE_KEY_PERSISTED_CYCLES, s_cycles);
+      persist_write_data(MESSAGE_KEY_PERSISTED_CORES, cores, sizeof(cores));
     }
   }
 }
@@ -231,7 +228,11 @@ static void unload_resources() {
 }
 
 static void init() {
-  s_load_status = LoadStatusInitial;
+  s_cycles = persist_read_int(MESSAGE_KEY_PERSISTED_CYCLES);
+  bool load_succeeded =
+      sizeof(cores) ==
+      persist_read_data(MESSAGE_KEY_PERSISTED_CORES, &cores, sizeof(cores));
+  s_load_status = load_succeeded ? LoadStatusLoaded : LoadStatusInitial;
   s_tick_count = 0;
 
   s_main_window = window_create();

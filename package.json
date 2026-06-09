@@ -22,7 +22,9 @@
             "LEVELS",
             "BROKEN",
             "CYCLES",
-            "GAME_URL"
+            "GAME_URL",
+            "PERSISTED_CORES",
+            "PERSISTED_CYCLES"
         ],
         "projectType": "native",
         "resources": {
