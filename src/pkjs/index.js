@@ -3,7 +3,9 @@ var clayConfig = require('./config')
 var clay = new Clay(clayConfig)
 const baseX = require('base-x').default
 
-const {encode, decode} = baseX('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+const {encode, decode} = baseX(
+  '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+)
 
 const rotate = (array, n) => array.slice(n).concat(array.slice(0, n))
 

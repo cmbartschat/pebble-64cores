@@ -1,2 +1,5 @@
 build/
 node_modules/
+/target
+.DS_Store
+.lock-*

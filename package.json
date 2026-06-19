@@ -8,6 +8,12 @@
         "pebble-app"
     ],
     "name": "64-cores",
+    "prettier": {
+        "singleQuote": true,
+        "semi": false,
+        "bracketSpacing": false,
+        "trailingComma": "es5"
+    },
     "pebble": {
         "capabilities": [
             "configurable"

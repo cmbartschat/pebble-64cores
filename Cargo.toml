@@ -1,0 +1,20 @@
+[package]
+name = "pebble_64cores"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["staticlib"]
+test = false
+doctest = false
+bench = false
+
+[dependencies]
+pebble_rust_2026 = { git = "https://github.com/cmbartschat/pebble-rust-2026.git", rev = "763b62606401c028d988a9fbe0918072cda015d2" }
+
+[profile.release]
+panic = "abort"
+opt-level = 2
+
+[profile.dev]
+panic = "abort"
