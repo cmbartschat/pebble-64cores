@@ -236,7 +236,7 @@ pub fn run_cores() {
 
     request_update();
 
-    window.show();
+    APP.show(window);
 
     Timer::repeat(Duration::from_mins(10), request_update);
 
