@@ -1,11 +1,13 @@
 use alloc::{rc::Rc, vec::Vec};
 use core::{cell::RefCell, time::Duration};
 
-use pebble_rust_2026::{
-    APP, Bitmap, BitmapLayer, GRect, InboxSize, SystemFont, TextLayer, Time, Timer, Value, Window,
-    color, log_c_str, message_keys, resource_ids,
-    sys::{GTextAlignment_GTextAlignmentRight, TimeUnits_MINUTE_UNIT},
+use pebble_sdk::{
+    APP, Bitmap, BitmapLayer, GRect, InboxSize, MallocAllocator, SystemFont, TextAlignment,
+    TextLayer, Time, TimeUnits, Timer, Value, Window, color, error, message_keys, resource_ids,
 };
+
+#[global_allocator]
+static ALLOCATOR: MallocAllocator = MallocAllocator;
 
 resource_ids!(resource_ids);
 
@@ -74,8 +76,6 @@ fn write_number_to_layer(layer: &mut TextLayer, v: u32) {
 }
 
 pub fn run_cores() {
-    log_c_str(c"starting app");
-
     let sprites = Bitmap::from_resource(resource_ids::SPRITES).unwrap();
     let core_sprites = (0..8)
         .map(|i| {
@@ -138,7 +138,7 @@ pub fn run_cores() {
     cycle_layer.set_font(&font);
     cycle_layer.set_text_color(color::GCOLOR_WHITE);
     cycle_layer.set_background_color(color::GCOLOR_CLEAR);
-    cycle_layer.set_alignment(GTextAlignment_GTextAlignmentRight);
+    cycle_layer.set_alignment(TextAlignment::Right);
     window.add_child(&mut cycle_layer);
 
     let mut update = move |state: &mut State| {
@@ -172,7 +172,7 @@ pub fn run_cores() {
         update(&mut state.borrow_mut());
         let mut update = update.clone();
         let state = state.clone();
-        APP.set_tick_handler(TimeUnits_MINUTE_UNIT, move || {
+        APP.set_tick_handler(TimeUnits::Minute, move || {
             update(&mut state.borrow_mut());
         });
     }
@@ -193,7 +193,6 @@ pub fn run_cores() {
                         _ => None,
                     }
                 {
-                    log_c_str(c"update received");
                     let mut state = state.borrow_mut();
                     state.status = Status::Loaded;
                     level_data.iter().enumerate().for_each(|(i, level)| {
@@ -216,7 +215,7 @@ pub fn run_cores() {
                         .write_bytes(message_keys::PERSISTED_CORES, level_data)
                         .unwrap();
                 } else {
-                    log_c_str(c"received invalid state");
+                    error!("received invalid state");
                 }
             }
             _ => {}
@@ -226,9 +225,8 @@ pub fn run_cores() {
     APP.open_inbox(InboxSize::Half).unwrap();
 
     let request_update = || {
-        log_c_str(c"requesting update");
         APP.send_message(|b| {
-            b.write_cstr(message_keys::TYPE, c"REFRESH")?;
+            b.set(message_keys::TYPE, c"REFRESH")?;
             Ok(())
         })
         .is_ok()
@@ -240,9 +238,5 @@ pub fn run_cores() {
 
     Timer::repeat(Duration::from_mins(10), request_update);
 
-    log_c_str(c"starting loop");
-
     APP.event_loop();
-
-    log_c_str(c"finished loop");
 }

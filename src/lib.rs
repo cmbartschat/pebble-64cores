@@ -6,7 +6,7 @@ extern crate alloc;
 mod app;
 
 use crate::app::run_cores;
-use pebble_rust_2026 as _;
+use pebble_sdk as _;
 
 #[unsafe(no_mangle)]
 fn main() -> i32 {
