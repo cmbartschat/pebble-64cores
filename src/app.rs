@@ -76,7 +76,10 @@ fn write_number_to_layer(layer: &mut TextLayer, v: u32) {
 }
 
 pub fn run_cores() {
+    // Doesn't work
     let sprites = Bitmap::from_resource(resource_ids::SPRITES).unwrap();
+    // This one works
+    // let sprites = Bitmap::from_resource(&1).unwrap();
     let core_sprites = (0..8)
         .map(|i| {
             (

@@ -221,7 +221,7 @@ dependencies = [
 [[package]]
 name = "pebble-sdk"
 version = "0.1.0"
-source = "git+https://codeberg.org/pebble-rust/pebble-sdk.git?rev=31e9e9e89a1f1d9269a4d41f32643f83418c677a#31e9e9e89a1f1d9269a4d41f32643f83418c677a"
+source = "git+https://codeberg.org/pebble-rust/pebble-sdk.git?rev=196d8bd999210d3de8baee55a557a99aca6e25f9#196d8bd999210d3de8baee55a557a99aca6e25f9"
 dependencies = [
  "bindgen",
  "bitflags",
@@ -236,7 +236,7 @@ dependencies = [
 [[package]]
 name = "pebble-sdk-macros"
 version = "0.1.0"
-source = "git+https://codeberg.org/pebble-rust/pebble-sdk.git?rev=31e9e9e89a1f1d9269a4d41f32643f83418c677a#31e9e9e89a1f1d9269a4d41f32643f83418c677a"
+source = "git+https://codeberg.org/pebble-rust/pebble-sdk.git?rev=196d8bd999210d3de8baee55a557a99aca6e25f9#196d8bd999210d3de8baee55a557a99aca6e25f9"
 dependencies = [
  "proc-macro2",
  "quote",
